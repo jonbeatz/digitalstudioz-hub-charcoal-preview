@@ -1,0 +1,777 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#101113" />
+  <link rel="icon" href="data:," />
+  <title>DigitalStudioz Hub — Charcoal Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+
+    :root {
+      color-scheme: light dark;
+      --bg: #17191c;
+      --bg-deep: #0e0f11;
+      --surface: rgba(31,34,38,.92);
+      --surface-strong: #272a2f;
+      --surface-muted: #1b1d21;
+      --text: #f3f4f5;
+      --muted: #b8bec6;
+      --faint: #89919c;
+      --line: rgba(255,255,255,.09);
+      --line-strong: rgba(255,255,255,.18);
+      --red: #f2555c;
+      --red-soft: rgba(242,85,92,.105);
+      --gold: #bf9150;
+      --gold-soft: rgba(191,145,80,.06);
+      --green: #63c58f;
+      --green-soft: rgba(99,197,143,.10);
+      --slate: #a3afbf;
+      --blue: #81a8d6;
+      --grid: rgba(255,255,255,.035);
+      --shadow: 0 22px 60px rgba(0,0,0,.34);
+      --focus: #f2555c;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #101113;
+        --bg-deep: #090a0b;
+        --surface: rgba(25,27,30,.90);
+        --surface-strong: #202328;
+        --surface-muted: #17191c;
+        --text: #f4f5f6;
+        --muted: #b2b8c0;
+        --faint: #7d858f;
+        --line: rgba(255,255,255,.085);
+        --line-strong: rgba(255,255,255,.17);
+        --red: #ff5a61;
+        --red-soft: rgba(255,90,97,.105);
+        --gold: #c99952;
+        --gold-soft: rgba(201,153,82,.07);
+        --green: #66ca93;
+        --green-soft: rgba(102,202,147,.10);
+        --slate: #9aa8ba;
+        --blue: #7ba6dd;
+        --grid: rgba(255,255,255,.035);
+        --shadow: 0 24px 72px rgba(0,0,0,.42);
+        --focus: #ff6b71;
+      }
+    }
+    * { box-sizing: border-box; }
+    html { min-width: 320px; background: var(--bg-deep); scroll-behavior: smooth; }
+    body {
+      margin: 0; min-height: 100vh; font-family: "Manrope", sans-serif; color: var(--text);
+      background:
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+        radial-gradient(circle at 12% 0%, var(--red-soft), transparent 27%),
+        var(--bg);
+      background-size: 32px 32px, 32px 32px, auto, auto;
+      -webkit-font-smoothing: antialiased;
+    }
+    button,a { -webkit-tap-highlight-color: transparent; }
+    .shell { width: min(1180px,calc(100% - 40px)); margin:0 auto; padding:64px 0 34px; }
+    .intro { display:grid; grid-template-columns:minmax(0,1fr) 315px; align-items:end; gap:44px; padding:10px 0 38px; border-bottom:1px solid var(--line-strong); }
+    .intro-copy { max-width:760px; }
+    .intro-side { display:grid; gap:12px; }
+    .edition { display:flex; align-items:center; gap:10px; margin:0 0 20px; color:var(--red); font:500 .75rem/1.3 "IBM Plex Mono",monospace; letter-spacing:.035em; }
+    .edition::before { content:""; width:28px; height:2px; background:var(--red); }
+    h1 { margin:0; max-width:720px; font-size:clamp(2.45rem,5.65vw,4.7rem); line-height:.98; letter-spacing:-.058em; font-weight:650; }
+    .lede { max-width:650px; margin:24px 0 0; color:var(--muted); font-size:clamp(1rem,1.45vw,1.12rem); line-height:1.7; }
+    .ambient { position:relative; min-height:184px; overflow:hidden; border:1px solid var(--line-strong); border-radius:12px; background:var(--surface-muted); box-shadow:var(--shadow); isolation:isolate; padding:14px; }
+    .hero-window { height:100%; min-height:154px; overflow:hidden; border:1px solid var(--line-strong); border-radius:7px; background:var(--surface-strong); box-shadow:0 12px 28px rgba(0,0,0,.2); }
+    .hero-window-top { display:flex; align-items:center; justify-content:space-between; height:29px; padding:0 10px; border-bottom:1px solid var(--line); }
+    .hero-dots { display:flex; gap:5px; }.hero-dots i{width:5px;height:5px;border-radius:50%;background:var(--faint);opacity:.55}.hero-dots i:first-child{background:var(--red);opacity:1}
+    .hero-window-label { color:var(--faint); font:500 .52rem/1 "IBM Plex Mono",monospace; letter-spacing:.035em; }
+    .hero-dashboard { display:grid; grid-template-columns:58px 1fr; min-height:124px; }
+    .hero-nav { padding:10px 9px; border-right:1px solid var(--line); background:var(--surface-muted); }
+    .hero-nav-mark { width:18px;height:18px;margin-bottom:15px;border-radius:4px;background:var(--red); }
+    .hero-nav-line { height:3px;margin:8px 0;border-radius:2px;background:var(--line-strong); }.hero-nav-line.active{width:115%;background:var(--red)}
+    .hero-board { padding:11px; }
+    .hero-board-head { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:10px; }
+    .hero-board-title { width:78px;height:5px;border-radius:3px;background:var(--text);opacity:.78; }
+    .hero-board-action { width:42px;height:14px;border:1px solid var(--line-strong);border-radius:4px;background:var(--surface-muted); }
+    .hero-kpis { display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:7px; }
+    .hero-kpi { min-width:0;padding:7px 6px;border:1px solid var(--line);border-radius:4px;background:var(--surface-muted); }
+    .hero-kpi strong { display:block;color:var(--text);font:700 .66rem/1 "Manrope",sans-serif; }.hero-kpi span{display:block;margin-top:5px;color:var(--faint);font:500 .39rem/1 "IBM Plex Mono",monospace;text-transform:uppercase}
+    .hero-rows { display:grid;gap:5px; }.hero-row{display:grid;grid-template-columns:7px 1fr 24px;gap:6px;align-items:center}.hero-row i{width:6px;height:6px;border-radius:2px;background:var(--red)}.hero-row span{height:3px;border-radius:2px;background:var(--line-strong)}.hero-row b{height:3px;border-radius:2px;background:var(--faint);opacity:.55}
+    .summary { display:flex; align-items:center; justify-content:space-between; gap:14px; width:100%; padding:16px 18px; border:1px solid var(--line); border-radius:10px; background:var(--surface); box-shadow:0 10px 34px rgba(0,0,0,.12); }
+    .summary-number { color:var(--red); font-size:2rem; line-height:1; font-weight:700; letter-spacing:-.04em; }
+    .summary-label { color:var(--muted); font:500 .72rem/1.45 "IBM Plex Mono",monospace; text-align:right; }
+    .filter-bar { position:sticky; top:10px; z-index:20; display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:14px -10px 0; padding:10px; border:1px solid var(--line); border-radius:10px; background:color-mix(in srgb,var(--surface-muted) 96%,transparent); box-shadow:0 12px 34px rgba(0,0,0,.22); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); }
+    .filter-label { margin-right:5px; color:var(--faint); font:500 .68rem/1 "IBM Plex Mono",monospace; }
+    .filter-button { appearance:none; display:inline-flex; align-items:center; gap:7px; min-height:34px; border:1px solid var(--line); border-radius:7px; padding:8px 10px; background:transparent; color:var(--muted); font:600 .74rem/1 "Manrope",sans-serif; cursor:pointer; transition:background 160ms,color 160ms,border 160ms; }
+    .filter-button:hover { color:var(--text); border-color:var(--line-strong); }
+    .filter-button[aria-pressed="true"] { color:var(--text); background:var(--surface-strong); border-color:color-mix(in srgb,var(--red) 48%,var(--line)); }
+    .filter-count { min-width:18px; padding:2px 5px; border-radius:4px; background:var(--surface-muted); color:var(--faint); font:500 .61rem/1 "IBM Plex Mono",monospace; text-align:center; }
+    .header-actions { display:flex; align-items:center; gap:8px; margin-left:auto; }
+    .view-switch { display:inline-flex; padding:3px; border:1px solid var(--line); border-radius:8px; background:var(--surface-muted); }
+    .view-button { appearance:none; border:0; border-radius:5px; padding:7px 10px; background:transparent; color:var(--faint); font:600 .71rem/1 "Manrope",sans-serif; cursor:pointer; }
+    .view-button:hover { color:var(--text); }
+    .view-button[aria-pressed="true"] { color:var(--text); background:var(--surface-strong); box-shadow:0 1px 4px rgba(0,0,0,.12); }
+    .command-trigger { appearance:none; display:inline-flex; align-items:center; gap:9px; border:1px solid var(--line-strong); border-radius:8px; padding:8px 10px; background:var(--surface-strong); color:var(--text); font:700 .74rem/1 "Manrope",sans-serif; cursor:pointer; transition:background 160ms,border-color 160ms,color 160ms; }
+    .command-trigger:hover { background:color-mix(in srgb,var(--surface-strong) 78%,var(--red)); color:var(--text); border-color:color-mix(in srgb,var(--red) 58%,var(--line-strong)); }
+    .command-trigger svg { width:14px;height:14px; }
+    kbd { min-width:28px; padding:3px 6px; border:1px solid currentColor; border-radius:4px; opacity:.68; font:500 .6rem/1 "IBM Plex Mono",monospace; text-align:center; }
+    .status-band { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; padding:12px 0 2px; }
+    .status-stat { position:relative; min-width:0; padding:14px 15px 13px; overflow:hidden; border:1px solid var(--line); border-radius:8px; background:var(--surface); }
+    .status-stat-number { color:var(--status-color); font-size:1.35rem; line-height:1; font-weight:700; }
+    .status-stat-label { display:block; margin-top:6px; color:var(--muted); font:500 .65rem/1 "IBM Plex Mono",monospace; }
+    .directory { padding-top:14px; }
+    .section { margin-top:44px; }
+    .section:first-child { margin-top:16px; }
+    .section-heading { display:flex; align-items:baseline; justify-content:space-between; gap:16px; margin:0 0 14px; }
+    .section-title { margin:0; font-size:1.12rem; line-height:1.3; font-weight:700; letter-spacing:-.02em; }
+    .section-title-count { color:var(--red); font:500 .72rem/1 "IBM Plex Mono",monospace; }
+    .section-count { color:var(--faint); font:500 .68rem/1 "IBM Plex Mono",monospace; }
+    .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+    .project { position:relative; display:flex; min-height:250px; flex-direction:column; padding:20px; overflow:hidden; border:1px solid var(--line); border-radius:12px; background:var(--surface); box-shadow:0 12px 34px rgba(0,0,0,.12); transition:border-color 180ms,transform 180ms,background 180ms; }
+    .project.openable:hover { transform:translateY(-2px); border-color:var(--line-strong); background:var(--surface-strong); }
+    .project-top { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px; }
+    .badges { display:flex; flex-wrap:wrap; gap:6px; }
+    .badge { display:inline-flex; align-items:center; min-height:22px; padding:4px 7px; border:1px solid var(--line); border-radius:5px; color:var(--muted); background:var(--surface-muted); font:500 .62rem/1 "IBM Plex Mono",monospace; }
+    .badge.status { color:var(--status-color); border-color:color-mix(in srgb,var(--status-color) 32%,var(--line)); background:color-mix(in srgb,var(--status-color) 7%,var(--surface)); }
+    .card-index { color:var(--faint); font:500 .64rem/1 "IBM Plex Mono",monospace; }
+    .project-visual { position:relative; height:132px; margin:0 0 22px; overflow:hidden; border:1px solid var(--line); border-radius:8px; background:var(--surface-muted); }
+    .project-visual::before { content:""; position:absolute; inset:0; background:linear-gradient(120deg,transparent 0 52%,var(--red-soft) 52% 53%,transparent 53% 100%); pointer-events:none; }
+    .micro-window { position:absolute; inset:12px; display:grid; grid-template-columns:44px 1fr; border:1px solid var(--line-strong); border-radius:6px; overflow:hidden; background:var(--surface-strong); box-shadow:0 8px 20px rgba(0,0,0,.16); }
+    .micro-rail { padding:9px 8px; border-right:1px solid var(--line); background:color-mix(in srgb,var(--surface-muted) 78%,transparent); }
+    .micro-logo { width:15px;height:15px;border-radius:4px;background:var(--red);margin-bottom:14px; }
+    .micro-nav { height:3px;margin:7px 0;border-radius:2px;background:var(--line-strong); }
+    .micro-nav.hot { width:130%;background:var(--red); }
+    .micro-main { padding:10px; overflow:hidden; }
+    .micro-head { display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:9px; }
+    .micro-title { width:74px;height:5px;border-radius:3px;background:var(--text);opacity:.78; }
+    .micro-chip { width:38px;height:13px;border:1px solid var(--line-strong);border-radius:4px; }
+    .micro-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:5px; }
+    .micro-card { min-height:30px;padding:5px;border:1px solid var(--line);border-radius:4px;background:var(--surface-muted); }
+    .micro-line { display:block;height:3px;margin-top:4px;border-radius:2px;background:var(--line-strong); }
+    .micro-line.red { background:var(--red);opacity:.8; }
+    .micro-row { display:grid;grid-template-columns:10px 1fr 32px;gap:6px;align-items:center;padding:5px 0;border-top:1px solid var(--line); }
+    .micro-dot { width:7px;height:7px;border-radius:50%;background:var(--status-color,var(--red)); }
+    .micro-bar { height:4px;border-radius:3px;background:var(--line-strong);overflow:hidden; }
+    .micro-bar i { display:block;height:100%;background:var(--red);border-radius:inherit; }
+    .micro-code { height:4px;border-radius:2px;background:var(--faint);opacity:.65; }
+    .micro-chart { position:relative;height:63px;margin-top:5px;border-left:1px solid var(--line);border-bottom:1px solid var(--line);display:flex;align-items:flex-end;gap:8px;padding:0 8px; }
+    .micro-chart i { flex:1;border-radius:3px 3px 0 0;background:var(--red);opacity:.84; }
+    .micro-chart i:nth-child(2n) { background:var(--slate); }
+    .micro-gauges { display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px; }
+    .micro-gauge { aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--red) var(--p),var(--line) 0);position:relative; }
+    .micro-gauge::after { content:""; position:absolute;inset:6px;border-radius:50%;background:var(--surface-strong); }
+    .micro-gauge b { position:relative;z-index:1;width:10px;height:3px;background:var(--text);opacity:.65; }
+    .micro-links { display:grid;gap:6px; }
+    .micro-link { display:grid;grid-template-columns:12px 1fr 28px;gap:7px;align-items:center;padding:6px;border:1px solid var(--line);border-radius:4px; }
+    .micro-link::before { content:"";width:10px;height:10px;border-radius:3px;background:color-mix(in srgb,var(--red) 25%,var(--surface-muted));border:1px solid color-mix(in srgb,var(--red) 60%,transparent); }
+    .micro-pills { display:flex;gap:4px;margin-bottom:7px; }.micro-pills i{display:block;width:34px;height:11px;border:1px solid var(--line);border-radius:4px}.micro-pills i:first-child{background:var(--red);border-color:var(--red)}
+    .micro-doc { display:grid;grid-template-columns:1fr 1fr;gap:7px; }.micro-page{height:70px;padding:7px;border:1px solid var(--line);border-radius:4px;background:var(--surface-muted)}
+    .micro-wave { width:100%;height:74px; }
+    .micro-window svg { width:100%;height:100%; }
+    .micro-cube { padding:0; }.micro-cube .micro-main{display:grid;place-items:center;position:relative}.micro-cube svg{width:88px;height:88px;overflow:visible}.micro-cube .micro-rail{position:relative;z-index:2}
+    .project.openable:hover .micro-window { border-color:color-mix(in srgb,var(--status-color) 44%,var(--line)); }
+    .project-main { min-width:0; }
+    .project-title { margin:0; font-size:clamp(1.22rem,2vw,1.5rem); line-height:1.15; letter-spacing:-.035em; font-weight:700; }
+    .project-description { margin:10px 0 24px; color:var(--muted); font-size:.89rem; line-height:1.58; }
+    .project-context { margin:-10px 0 24px; color:var(--faint); font:500 .67rem/1.55 "IBM Plex Mono",monospace; }
+    .project.leaderboard { grid-column:1/-1; }
+    .project.leaderboard .project-visual { height:112px; }
+    .leaderboard-grid { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:-4px 0 24px; }
+    .model-board { padding:14px;border:1px solid var(--line);border-radius:8px;background:var(--surface-muted); }
+    .model-board-title { display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:0 0 10px;color:var(--text);font-size:.77rem;font-weight:700; }
+    .model-board-title span { color:var(--faint);font:500 .58rem/1 "IBM Plex Mono",monospace; }
+    .model-list { display:grid;gap:0;margin:0;padding:0;list-style:none; }
+    .model-row { display:grid;grid-template-columns:24px minmax(0,.72fr) minmax(0,1.28fr);gap:9px;align-items:baseline;padding:8px 0;border-top:1px solid var(--line); }
+    .model-rank{color:var(--red);font:500 .62rem/1.4 "IBM Plex Mono",monospace}.model-name{color:var(--text);font-size:.74rem;font-weight:700}.model-note{color:var(--faint);font:400 .62rem/1.45 "IBM Plex Mono",monospace}.model-row.open .model-name,.model-row.open .model-note{color:var(--faint)}
+    .retired-line { margin:-10px 0 24px;color:var(--faint);font:400 .62rem/1.5 "IBM Plex Mono",monospace; }.retired-line strong{color:var(--muted);font-weight:600}
+    .project-bottom { display:flex;align-items:end;justify-content:space-between;gap:18px;margin-top:auto;padding-top:16px;border-top:1px solid var(--line); }
+    .meta { min-width:0; }.meta-line{display:flex;gap:6px;color:var(--faint);font:400 .66rem/1.5 "IBM Plex Mono",monospace}.meta-line strong{color:var(--muted);font-weight:600}.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}.tag{color:var(--faint);font:400 .62rem/1.25 "IBM Plex Mono",monospace}.tag:not(:last-child)::after{content:" /";color:var(--line-strong)}
+    .project-link { display:inline-flex;flex:0 0 auto;align-items:center;gap:8px;min-height:38px;padding:9px 12px;border:1px solid var(--line-strong);border-radius:7px;background:var(--surface-strong);color:var(--text);text-decoration:none;font-size:.75rem;font-weight:700;transition:background 160ms,color 160ms,border-color 160ms; }.project-link:hover{background:color-mix(in srgb,var(--surface-strong) 78%,var(--red));color:var(--text);border-color:color-mix(in srgb,var(--red) 58%,var(--line-strong))}.project-link svg{width:14px;height:14px}.private-note{max-width:130px;color:var(--faint);text-align:right;font:500 .64rem/1.4 "IBM Plex Mono",monospace}
+    .empty-state { grid-column:1/-1;padding:22px;border:1px dashed var(--line-strong);border-radius:8px;color:var(--muted);background:var(--surface);font-size:.86rem;line-height:1.5}.empty-state strong{color:var(--text)}
+    .directory.view-list .grid{grid-template-columns:1fr;gap:8px}.directory.view-list .project{display:grid;grid-template-columns:minmax(150px,.78fr) minmax(260px,1.7fr) minmax(190px,1fr) auto;align-items:center;gap:18px;min-height:0;padding:15px 18px;border-radius:9px}.directory.view-list .project.leaderboard{grid-column:auto}.directory.view-list .project-top{margin:0}.directory.view-list .project-visual,.directory.view-list .project-context,.directory.view-list .leaderboard-grid,.directory.view-list .retired-line{display:none}.directory.view-list .project-title{font-size:1rem;letter-spacing:-.02em}.directory.view-list .project-description{margin:5px 0 0;font-size:.77rem;line-height:1.45}.directory.view-list .project-bottom{display:contents}.directory.view-list .meta{align-self:center}.directory.view-list .project-link,.directory.view-list .private-note{align-self:center}
+    footer{display:flex;justify-content:space-between;gap:24px;margin-top:64px;padding:22px 0 12px;border-top:1px solid var(--line-strong);color:var(--faint);font:400 .68rem/1.5 "IBM Plex Mono",monospace}
+    .back-to-top { position:fixed; right:max(18px,env(safe-area-inset-right)); bottom:max(22px,calc(env(safe-area-inset-bottom) + 18px)); z-index:30; display:inline-flex; align-items:center; justify-content:center; width:44px; height:44px; border:1px solid var(--line-strong); border-radius:9px; background:var(--surface-strong); color:var(--text); box-shadow:0 14px 36px rgba(0,0,0,.34); cursor:pointer; transition:background 160ms,border-color 160ms; }
+    .back-to-top[hidden] { display:none; }
+    .back-to-top:hover { background:color-mix(in srgb,var(--surface-strong) 78%,var(--red)); border-color:color-mix(in srgb,var(--red) 58%,var(--line-strong)); }
+    .back-to-top svg { width:18px;height:18px; }
+    .palette-backdrop{position:fixed;z-index:50;inset:0;display:grid;place-items:start center;padding:min(14vh,110px) 18px 24px;background:rgba(4,5,6,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}.command-panel{width:min(680px,100%);max-height:min(72vh,670px);overflow:hidden;border:1px solid var(--line-strong);border-radius:12px;background:var(--surface-strong);box-shadow:0 32px 100px rgba(0,0,0,.6)}.command-head{display:flex;align-items:center;gap:10px;padding:14px;border-bottom:1px solid var(--line)}.command-head svg{width:18px;height:18px;color:var(--red);flex:0 0 auto}.command-input{width:100%;border:0;outline:0;background:transparent;color:var(--text);font:500 1rem/1.4 "Manrope",sans-serif}.command-input::placeholder{color:var(--faint)}.command-close{appearance:none;border:1px solid var(--line);border-radius:5px;padding:6px 8px;background:transparent;color:var(--muted);font:500 .64rem/1 "IBM Plex Mono",monospace;cursor:pointer}.command-scopes{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line)}.scope-field{display:grid;gap:6px}.scope-field span{color:var(--faint);font:500 .6rem/1 "IBM Plex Mono",monospace}.scope-field select{width:100%;border:1px solid var(--line);border-radius:6px;padding:9px 10px;background:var(--surface-muted);color:var(--text);font:500 .74rem/1 "Manrope",sans-serif}.command-results{max-height:min(43vh,390px);margin:0;padding:7px;overflow-y:auto;list-style:none}.command-option{appearance:none;display:grid;grid-template-columns:minmax(0,1fr) auto;width:100%;gap:6px 16px;border:1px solid transparent;border-radius:7px;padding:11px 12px;background:transparent;color:var(--text);text-align:left;cursor:pointer}.command-option[aria-selected="true"],.command-option:hover{border-color:var(--line);background:var(--surface-muted)}.command-option-title{font-size:.86rem;font-weight:700}.command-option-section{color:var(--faint);font:500 .62rem/1.4 "IBM Plex Mono",monospace}.command-option-status{grid-row:1/span 2;grid-column:2;align-self:center;color:var(--red);font:500 .63rem/1 "IBM Plex Mono",monospace}.command-empty{padding:26px 18px;color:var(--muted);text-align:center;font-size:.82rem}.command-foot{display:flex;flex-wrap:wrap;gap:14px;padding:10px 14px 12px;border-top:1px solid var(--line);color:var(--faint);font:400 .6rem/1.4 "IBM Plex Mono",monospace}
+    .filter-button:focus-visible,.view-button:focus-visible,.project-link:focus-visible,.command-trigger:focus-visible,.command-close:focus-visible,.command-input:focus-visible,.scope-field select:focus-visible,.command-option:focus-visible,.back-to-top:focus-visible{outline:3px solid color-mix(in srgb,var(--focus) 55%,transparent);outline-offset:3px}.hidden{display:none!important}
+    @media(max-width:760px){.shell{width:min(100% - 26px,620px);padding-top:38px}.intro{grid-template-columns:1fr;gap:24px;padding-bottom:28px}.intro-side{grid-template-columns:minmax(0,1fr) auto;align-items:stretch}.ambient{min-height:140px}.summary{width:auto;min-width:154px;flex-direction:column;align-items:flex-start;justify-content:center}.summary-label{text-align:left}.status-band{grid-template-columns:repeat(2,minmax(0,1fr))}.grid{grid-template-columns:1fr}.project.leaderboard{grid-column:auto}.leaderboard-grid{grid-template-columns:1fr}.section{margin-top:34px}.project{min-height:220px}.directory.view-list .project{grid-template-columns:minmax(0,1fr) auto;gap:11px 16px;padding:16px}.directory.view-list .project-top,.directory.view-list .project-main{grid-column:1/-1}.directory.view-list .meta{grid-column:1}.directory.view-list .project-link,.directory.view-list .private-note{grid-column:2}footer{flex-direction:column;gap:6px}}
+    @media(max-width:520px){.shell{width:min(100% - 22px,620px)}.intro-side{grid-template-columns:1fr}.summary{width:100%;flex-direction:row;align-items:center}.summary-label{text-align:right}.header-actions{width:100%;margin-left:0}.view-switch{flex:1 1 auto}.view-button{flex:1 1 50%}.command-trigger{flex:1 1 auto;justify-content:center}.command-scopes{grid-template-columns:1fr}.palette-backdrop{padding:16px 10px}.command-panel{max-height:calc(100vh - 32px)}.command-results{max-height:calc(100vh - 292px)}.project-visual{height:124px}}
+    @media(max-width:430px){h1{font-size:clamp(2.45rem,12vw,3.2rem)}.filter-label{width:100%;margin:0 0 3px}.project-bottom{align-items:stretch;flex-direction:column}.project-link{justify-content:center;width:100%}.private-note{max-width:none;text-align:left}.directory.view-list .project{grid-template-columns:1fr}.directory.view-list .meta,.directory.view-list .project-link,.directory.view-list .private-note{grid-column:1}.directory.view-list .project-link{width:100%}.micro-window{inset:10px}.micro-grid{gap:4px}}
+    @media(max-width:360px){.header-actions{align-items:stretch;flex-direction:column}.command-trigger{width:100%}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="intro">
+      <div class="intro-copy">
+        <p class="edition">Directory · Updated Sep 25, 2026</p>
+        <h1>What’s live, what’s building, what stays reference.</h1>
+        <p class="lede">A focused front door into the tools and dashboards shaping the studio. Scan the signal, open a project, or find the source of truth.</p>
+      </div>
+      <div class="intro-side">
+        <div class="ambient" aria-hidden="true">
+          <div class="hero-window">
+            <div class="hero-window-top"><span class="hero-dots"><i></i><i></i><i></i></span><span class="hero-window-label">PROJECT INDEX</span></div>
+            <div class="hero-dashboard">
+              <div class="hero-nav"><div class="hero-nav-mark"></div><div class="hero-nav-line active"></div><div class="hero-nav-line"></div><div class="hero-nav-line"></div><div class="hero-nav-line"></div></div>
+              <div class="hero-board">
+                <div class="hero-board-head"><span class="hero-board-title"></span><span class="hero-board-action"></span></div>
+                <div class="hero-kpis"><div class="hero-kpi"><strong>04</strong><span>Live</span></div><div class="hero-kpi"><strong>01</strong><span>Building</span></div><div class="hero-kpi"><strong>06</strong><span>Reference</span></div></div>
+                <div class="hero-rows"><div class="hero-row"><i></i><span></span><b></b></div><div class="hero-row"><i></i><span></span><b></b></div><div class="hero-row"><i></i><span></span><b></b></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="summary" aria-label="Hub summary">
+          <span class="summary-number" id="openable-count">4</span>
+          <span class="summary-label">destinations<br />ready to open</span>
+        </aside>
+      </div>
+    </header>
+
+    <nav class="filter-bar" aria-label="Filter projects by status">
+      <span class="filter-label">SHOW</span>
+      <button class="filter-button" type="button" data-filter="all" aria-pressed="true">All <span class="filter-count">0</span></button>
+      <button class="filter-button" type="button" data-filter="live" aria-pressed="false">Live <span class="filter-count">0</span></button>
+      <button class="filter-button" type="button" data-filter="building" aria-pressed="false">Building <span class="filter-count">0</span></button>
+      <button class="filter-button" type="button" data-filter="reference" aria-pressed="false">Reference <span class="filter-count">0</span></button>
+      <button class="filter-button" type="button" data-filter="parked" aria-pressed="false">Parked <span class="filter-count">0</span></button>
+      <div class="header-actions">
+        <div class="view-switch" role="group" aria-label="Project view">
+          <button class="view-button" type="button" data-view="grid" aria-pressed="true">Grid</button>
+          <button class="view-button" type="button" data-view="list" aria-pressed="false">List</button>
+        </div>
+        <button class="command-trigger" id="command-trigger" type="button" aria-haspopup="dialog" aria-controls="command-palette">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          Jump <kbd id="shortcut-hint">⌘K</kbd>
+        </button>
+      </div>
+    </nav>
+
+    <section class="status-band" aria-label="Visible projects by status">
+      <div class="status-stat" data-stat-status="live" style="--status-color:var(--green)"><span class="status-stat-number">0</span><span class="status-stat-label">Live</span></div>
+      <div class="status-stat" data-stat-status="building" style="--status-color:var(--gold)"><span class="status-stat-number">0</span><span class="status-stat-label">Building</span></div>
+      <div class="status-stat" data-stat-status="reference" style="--status-color:var(--slate)"><span class="status-stat-number">0</span><span class="status-stat-label">Reference</span></div>
+      <div class="status-stat" data-stat-status="parked" style="--status-color:var(--red)"><span class="status-stat-number">0</span><span class="status-stat-label">Parked</span></div>
+    </section>
+
+    <div class="directory" id="directory" aria-live="polite"></div>
+
+    <footer>
+      <span>Last updated 2026-09-25</span>
+      <span>Charcoal preview · Muse</span>
+    </footer>
+  </main>
+
+  <button class="back-to-top" id="back-to-top" type="button" aria-label="Back to top" hidden>
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 14 6-6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+
+  <div class="palette-backdrop hidden" id="command-palette" aria-hidden="true">
+    <section class="command-panel" role="dialog" aria-modal="true" aria-label="Jump to project">
+      <div class="command-head">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <input class="command-input" id="command-input" type="search" autocomplete="off" placeholder="Search projects, owners, or tags…" aria-label="Search projects" aria-controls="command-results" aria-autocomplete="list" />
+        <button class="command-close" id="command-close" type="button" aria-label="Close command palette">ESC</button>
+      </div>
+      <div class="command-scopes">
+        <label class="scope-field"><span>SECTION</span><select id="command-section" aria-label="Filter command results by section"></select></label>
+        <label class="scope-field"><span>STATUS</span><select id="command-status" aria-label="Filter command results by status"></select></label>
+      </div>
+      <ul class="command-results" id="command-results" role="listbox" aria-label="Project results"></ul>
+      <div class="command-foot"><span>↑↓ navigate</span><span>↵ jump</span><span>esc close</span><span>tab moves controls</span></div>
+    </section>
+  </div>
+
+  <script>
+    // === SINGLE SOURCE OF TRUTH: CARD DATA ===
+    // Add, remove, reorder, or update cards only in this array; every view, count, badge, section, search result, and link renders from it.
+    const PROJECTS = [
+      {
+        section: "Live tools",
+        title: "Skill Catalog",
+        description: "Browse the working skill library, roles, sources, and verification state.",
+        status: "live",
+        visibility: "link-only",
+        href: "https://muse.ai/s/skill-catalog-fxd6l9xwhxaxwxtj",
+        updated: "2026-09-22",
+        owner: "DigitalStudioz",
+        tags: ["skills", "systems", "reference"]
+      },
+      {
+        section: "Live tools",
+        title: "API Key Organizer",
+        description: "Static prototype for organizing fictional key records and export formats safely.",
+        status: "live",
+        visibility: "link-only",
+        href: "https://muse.ai/s/api-key-organizer-qxv6lbxy3qgtxg",
+        updated: "2026-09-22",
+        owner: "DigitalStudioz",
+        tags: ["prototype", "developer", "utility"]
+      },
+      {
+        section: "Live tools",
+        title: "LinkLabz",
+        description: "Review, compare, and organize useful links on the public link review board.",
+        status: "live",
+        visibility: "public",
+        href: "https://muse.ai/s/link-review-board-ec6lxgxhuxx4xf6",
+        updated: "2026-09-25",
+        owner: "DigitalStudioz",
+        tags: ["links", "reviews", "board"]
+      },
+      {
+        section: "Studio dashboards",
+        title: "AI Subscriptions Dashboard",
+        description: "See the studio’s AI tools and subscription landscape in one focused view.",
+        status: "live",
+        visibility: "link-only",
+        href: "https://muse.ai/s/my-subscriptions-kc6laag4qr0",
+        updated: "2026-09-22",
+        owner: "DigitalStudioz",
+        tags: ["subscriptions", "stack", "dashboard"]
+      },
+      {
+        section: "Studio dashboards",
+        title: "CreditLabz",
+        description: "Prototype dashboard for tracking API credit balances and subscription costs while the live system is in build.",
+        status: "building",
+        visibility: "prototype",
+        href: "https://muse.ai/s/api-credit-dashboard-dy6mxeuysxv7xz",
+        updated: "2026-09-25",
+        owner: "DigitalStudioz",
+        tags: ["prototype", "in-build", "credits"]
+      },
+      {
+        section: "Reference",
+        title: "Personal Skill Pack",
+        description: "North star for the JonBeatz and DigitalStudioz design language, patterns, and build standards.",
+        status: "reference",
+        visibility: "private",
+        href: null,
+        updated: "2026-09-22",
+        owner: "Jon",
+        tags: ["north-star", "design", "standards"]
+      },
+      {
+        section: "Reference",
+        title: "Video & Image Lab",
+        description: "The ComfyUI video and image pipeline: six HOLD video lanes, Qwen-Image lanes, per-lane recipes, and VRAM budgets.",
+        details: "Knowledge pack: JonBeatz Command Center repo · Per-lane recipes + VRAM budgets: Vader alongside ComfyUI",
+        status: "reference",
+        visibility: "internal-doc",
+        href: null,
+        note: "Internal reference · no public link",
+        updated: "2026-09-22",
+        owner: "JonBeatz",
+        tags: ["comfyui", "video-lab", "image-lab"]
+      },
+      {
+        section: "Reference",
+        title: "PromptLab",
+        description: "Prompt templates and the unified starter system for image, video, 3D, and exploded-view work.",
+        details: "Canonical home: JonBeatz Command Center repo",
+        status: "reference",
+        visibility: "internal-doc",
+        href: null,
+        note: "Internal reference · no public link",
+        updated: "2026-09-22",
+        owner: "JonBeatz",
+        tags: ["prompts", "templates", "systems"]
+      },
+      {
+        section: "Reference",
+        title: "Website-Build System",
+        description: "AI website-build playbook: lane 1 Divi 5 + AI, lane 2 screenshot/URL to custom WordPress theme, and 3D scroll-scrub web-delivery notes.",
+        details: "Canonical home: Website-Templates repo + JonBeatz Command Center",
+        status: "reference",
+        visibility: "internal-doc",
+        href: null,
+        note: "Internal reference · no public link",
+        updated: "2026-09-22",
+        owner: "DigitalStudioz",
+        tags: ["divi-5", "wordpress", "3d-web"]
+      },
+      {
+        section: "Reference",
+        title: "3D Lab",
+        description: "Image-to-3D playground for Hunyuan3D, Tripo, and TRELLIS finalists plus the exploded-view fast path.",
+        details: "Learning lab · ComfyUI · No project attached yet",
+        status: "reference",
+        visibility: "internal-doc",
+        href: null,
+        note: "Internal reference · no public link",
+        updated: "2026-09-22",
+        owner: "JonBeatz",
+        tags: ["3d", "comfyui", "exploded-view"]
+      },
+      {
+        section: "Reference",
+        title: "Model Leaderboard",
+        description: "Living record of what held up, what moved naturally, and which models earned the next production slot.",
+        details: "Verified HOLD results · qualitative verdicts and wall times · formal numeric scores not logged yet",
+        status: "reference",
+        visibility: "public",
+        href: null,
+        note: "Living public record",
+        updated: "2026-09-22",
+        owner: "JonBeatz",
+        tags: ["models", "benchmarks", "production"],
+        leaderboard: {
+          video: [
+            { name: "wan22", note: "Default / proven · pond gate 81f · 16fps · 832×480 · 25:36 wall · ~13.8GB VRAM" },
+            { name: "h3 MiniMax", note: "Strongest character hold · 7:30 · 24fps + AAC" },
+            { name: "ltx23", note: "Most lifelike micro-motion · 4:30 · 24fps + AAC" },
+            { name: "lightx2v", note: "Daily speed lane · 8:05" },
+            { name: "framepack", note: "HOLD lane · 14:51" }
+          ],
+          image: [
+            { name: "Qwen-Image 2512", note: "T2I · Apache 2.0 · commercial-safe" },
+            { name: "Qwen-Image Edit 2511", note: "Edit keeper" },
+            { name: "Klein 9B", note: "Verified image model" },
+            { name: "Open slot", note: "Next verified image model", open: true },
+            { name: "Open slot", note: "Next verified image model", open: true }
+          ]
+        }
+      },
+      {
+        section: "Parked / ideas",
+        title: "Spitball Parking Lot",
+        description: "The living source of truth for wedges, experiments, success criteria, and kill conditions.",
+        status: "parked",
+        visibility: "link-only",
+        href: "https://docs.google.com/document/d/1RRw58E2vwq4HQqAh4ulCKMHlIvlE4rrxQgolImI6gVU/edit",
+        updated: "2026-09-22",
+        owner: "Jon + Ravyn",
+        tags: ["ideas", "experiments", "source-of-truth"]
+      }
+    ];
+
+    const SECTIONS = ["Live tools", "Studio dashboards", "In progress", "Reference", "Parked / ideas"];
+    const STATUS_COLORS = {
+      live: "var(--green)",
+      building: "var(--gold)",
+      reference: "var(--slate)",
+      parked: "var(--red)"
+    };
+
+    const directory = document.getElementById("directory");
+    const buttons = Array.from(document.querySelectorAll(".filter-button"));
+    const viewButtons = Array.from(document.querySelectorAll(".view-button"));
+    const statusStats = Array.from(document.querySelectorAll(".status-stat"));
+    const palette = document.getElementById("command-palette");
+    const commandTrigger = document.getElementById("command-trigger");
+    const commandInput = document.getElementById("command-input");
+    const commandClose = document.getElementById("command-close");
+    const commandSection = document.getElementById("command-section");
+    const commandStatus = document.getElementById("command-status");
+    const commandResults = document.getElementById("command-results");
+    const shortcutHint = document.getElementById("shortcut-hint");
+    const backToTop = document.getElementById("back-to-top");
+    let activeFilter = "all";
+    let activeView = "grid";
+    let activeCommandIndex = 0;
+    let commandMatches = [];
+    let lastFocused = null;
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>'"]/g, function(char) {
+        return {"&":"&amp;", "<":"&lt;", ">":"&gt;", "'":"&#39;", '"':"&quot;"}[char];
+      });
+    }
+
+    function sigilMarkup(project, sourceIndex) {
+      const line = '<span class="micro-line"></span>';
+      const row = '<div class="micro-row"><span class="micro-dot"></span><span class="micro-code"></span><span class="micro-bar"><i style="width:68%"></i></span></div>';
+      let main = '';
+      if (project.title === 'Skill Catalog') {
+        main = '<div class="micro-head"><span class="micro-title"></span><span class="micro-chip"></span></div><div class="micro-grid"><div class="micro-card"><span class="micro-line red"></span>'+line+line+'</div><div class="micro-card">'+line+'<span class="micro-line red"></span>'+line+'</div><div class="micro-card">'+line+line+'<span class="micro-line red"></span></div><div class="micro-card">'+line+line+'</div><div class="micro-card">'+line+line+'</div><div class="micro-card">'+line+line+'</div></div>';
+      } else if (project.title === 'API Key Organizer') {
+        main = '<div class="micro-head"><span class="micro-title"></span><span class="micro-chip"></span></div>'+row+row+row+'<div class="micro-row"><span class="micro-dot"></span><span class="micro-code"></span><span class="micro-bar"><i style="width:42%"></i></span></div>';
+      } else if (project.title === 'LinkLabz') {
+        main = '<div class="micro-pills"><i></i><i></i><i></i></div><div class="micro-links"><div class="micro-link"><span class="micro-code"></span><span class="micro-bar"><i style="width:85%"></i></span></div><div class="micro-link"><span class="micro-code"></span><span class="micro-bar"><i style="width:54%"></i></span></div><div class="micro-link"><span class="micro-code"></span><span class="micro-bar"><i style="width:72%"></i></span></div></div>';
+      } else if (project.title === 'AI Subscriptions Dashboard') {
+        main = '<div class="micro-head"><span class="micro-title"></span><span class="micro-chip"></span></div><div class="micro-chart"><i style="height:42%"></i><i style="height:72%"></i><i style="height:58%"></i><i style="height:88%"></i><i style="height:64%"></i><i style="height:78%"></i></div>';
+      } else if (project.title === 'CreditLabz') {
+        main = '<div class="micro-head"><span class="micro-title"></span><span class="micro-chip"></span></div><div class="micro-gauges"><span class="micro-gauge" style="--p:72%"><b></b></span><span class="micro-gauge" style="--p:48%"><b></b></span><span class="micro-gauge" style="--p:84%"><b></b></span></div>';
+      } else if (project.title === 'Video & Image Lab') {
+        main = '<div class="micro-head"><span class="micro-title"></span><span class="micro-chip"></span></div><svg class="micro-wave" viewBox="0 0 220 64" preserveAspectRatio="none"><path d="M0 32h220" stroke="currentColor" opacity=".12"/><path d="M0 32l8-4 8 10 8-20 8 29 8-33 8 24 8-7 8 2 8-18 8 31 8-27 8 12 8 4 8-20 8 27 8-12 8 5 8-18 8 29 8-22 8 4 8 7 8-16 8 17 8-8 8 2" stroke="#ff5a61" stroke-width="2" fill="none"/></svg>';
+      } else if (project.title === 'Website-Build System') {
+        main = '<div class="micro-doc"><div class="micro-page"><span class="micro-line red"></span>'+line+line+line+'</div><div class="micro-page"><span class="micro-line red"></span>'+line+line+line+'</div></div>';
+      } else if (project.title === '3D Lab') {
+        main = '<svg viewBox="0 0 100 100" fill="none"><path d="m50 10 32 18v38L50 86 18 66V28l32-18Z" stroke="#ff5a61"/><path d="m18 28 32 19 32-19M50 47v39" stroke="currentColor" opacity=".55"/><path d="m32 37 18-11 18 11v22L50 70 32 59V37Z" stroke="currentColor" stroke-dasharray="3 4" opacity=".4"/></svg>';
+      } else if (project.title === 'Model Leaderboard') {
+        main = '<div class="micro-head"><span class="micro-title"></span><span class="micro-chip"></span></div>'+row+row+'<div class="micro-row"><span class="micro-dot"></span><span class="micro-code"></span><span class="micro-bar"><i style="width:48%"></i></span></div>';
+      } else if (project.title === 'Spitball Parking Lot') {
+        main = '<div class="micro-head"><span class="micro-title"></span><span class="micro-chip"></span></div><div class="micro-grid"><div class="micro-card"><span class="micro-line red"></span>'+line+'</div><div class="micro-card">'+line+line+'</div><div class="micro-card">'+line+'<span class="micro-line red"></span></div></div>';
+      } else {
+        main = '<div class="micro-head"><span class="micro-title"></span><span class="micro-chip"></span></div><div class="micro-doc"><div class="micro-page"><span class="micro-line red"></span>'+line+line+line+'</div><div class="micro-page">'+line+line+line+'</div></div>';
+      }
+      return '<div class="project-visual" aria-hidden="true"><div class="micro-window '+(project.title === '3D Lab' ? 'micro-cube' : '')+'"><div class="micro-rail"><div class="micro-logo"></div><div class="micro-nav hot"></div><div class="micro-nav"></div><div class="micro-nav"></div><div class="micro-nav"></div></div><div class="micro-main">'+main+'</div></div></div>';
+    }
+
+    function leaderboardMarkup(board) {
+      if (!board) return "";
+      function listMarkup(items) {
+        return '<ol class="model-list">' + items.map(function(item, index) {
+          return '<li class="model-row ' + (item.open ? "open" : "") + '">' +
+            '<span class="model-rank">' + String(index + 1).padStart(2, "0") + '</span>' +
+            '<span class="model-name">' + escapeHtml(item.name) + '</span>' +
+            '<span class="model-note">' + escapeHtml(item.note) + '</span></li>';
+        }).join("") + '</ol>';
+      }
+      return '<div class="leaderboard-grid" aria-label="Current model leaderboard">' +
+        '<section class="model-board"><h4 class="model-board-title">Video models <span>TOP 5 · HOLD</span></h4>' + listMarkup(board.video) + '</section>' +
+        '<section class="model-board"><h4 class="model-board-title">Image models <span>TOP 5</span></h4>' + listMarkup(board.image) + '</section>' +
+      '</div><p class="retired-line"><strong>Rotation rule:</strong> Updated as models change. When one is dethroned, it moves to a retired line with the model that replaced it. <strong>Retired:</strong> none yet.</p>';
+    }
+
+    function cardMarkup(project, displayIndex, sourceIndex) {
+      const tags = project.tags.map(function(tag) {
+        return '<span class="tag">' + escapeHtml(tag) + '</span>';
+      }).join("");
+
+      const action = project.href
+        ? '<a class="project-link" href="' + escapeHtml(project.href) + '" target="_blank" rel="noopener noreferrer" aria-label="Open ' + escapeHtml(project.title) + '">' +
+            'Open <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>'
+        : '<span class="private-note">' + escapeHtml(project.note || "Available through the private workspace") + '</span>';
+      const context = project.details ? '<p class="project-context">' + escapeHtml(project.details) + '</p>' : "";
+      const leaderboard = leaderboardMarkup(project.leaderboard);
+
+      return '<article class="project ' + (project.href ? "openable " : "") + (project.leaderboard ? "leaderboard" : "") + '" id="project-' + sourceIndex + '" tabindex="-1" data-status="' + escapeHtml(project.status) + '" style="--status-color:' + STATUS_COLORS[project.status] + '">' +
+        '<div class="project-top"><div class="badges">' +
+          '<span class="badge status">' + escapeHtml(project.status) + '</span>' +
+          '<span class="badge">' + escapeHtml(project.visibility) + '</span>' +
+        '</div><span class="card-index">' + String(displayIndex + 1).padStart(2, "0") + '</span></div>' +
+        sigilMarkup(project, sourceIndex) +
+        '<div class="project-main"><h3 class="project-title">' + escapeHtml(project.title) + '</h3>' +
+        '<p class="project-description">' + escapeHtml(project.description) + '</p>' +
+        context + leaderboard + '</div>' +
+        '<div class="project-bottom"><div class="meta">' +
+          '<div class="meta-line"><strong>Owner</strong><span>' + escapeHtml(project.owner) + '</span></div>' +
+          '<div class="meta-line"><strong>Updated</strong><span>' + escapeHtml(project.updated) + '</span></div>' +
+          '<div class="tags">' + tags + '</div>' +
+        '</div>' + action + '</div></article>';
+    }
+
+    function render(filter) {
+      directory.innerHTML = SECTIONS.map(function(sectionName) {
+        const allInSection = PROJECTS.filter(function(project) { return project.section === sectionName; });
+        const visible = allInSection.filter(function(project) { return filter === "all" || project.status === filter; });
+        const shouldShow = filter === "all" || visible.length > 0;
+        if (!shouldShow) return "";
+
+        const cards = visible.length
+          ? visible.map(function(project) {
+              const sourceIndex = PROJECTS.indexOf(project);
+              return cardMarkup(project, sourceIndex, sourceIndex);
+            }).join("")
+          : '<div class="empty-state"><strong>Nothing queued here.</strong> This lane stays clear until a project is actively building.</div>';
+        const sectionId = "section-" + sectionName.replace(/[^a-z0-9]+/gi, "-").toLowerCase();
+
+        return '<section class="section" aria-labelledby="' + escapeHtml(sectionId) + '">' +
+          '<div class="section-heading">' +
+            '<h2 class="section-title" id="' + escapeHtml(sectionId) + '">' + escapeHtml(sectionName) + ' <span class="section-title-count">(' + visible.length + ')</span></h2>' +
+            '<span class="section-count">' + visible.length + (visible.length === 1 ? " entry" : " entries") + '</span>' +
+          '</div><div class="grid">' + cards + '</div></section>';
+      }).join("");
+    }
+
+    function setPageFilter(filter) {
+      activeFilter = filter;
+      buttons.forEach(function(item) { item.setAttribute("aria-pressed", String(item.dataset.filter === filter)); });
+      render(filter);
+      updateStatusStats(filter);
+    }
+
+    function setView(view) {
+      activeView = view;
+      directory.classList.toggle("view-list", view === "list");
+      viewButtons.forEach(function(item) { item.setAttribute("aria-pressed", String(item.dataset.view === view)); });
+    }
+
+    function updateStatusStats(filter) {
+      const visibleProjects = PROJECTS.filter(function(project) { return filter === "all" || project.status === filter; });
+      statusStats.forEach(function(stat) {
+        const status = stat.dataset.statStatus;
+        const count = visibleProjects.filter(function(project) { return project.status === status; }).length;
+        stat.querySelector(".status-stat-number").textContent = count;
+      });
+    }
+
+    function updateCounts() {
+      buttons.forEach(function(button) {
+        const filter = button.dataset.filter;
+        const count = filter === "all" ? PROJECTS.length : PROJECTS.filter(function(project) { return project.status === filter; }).length;
+        button.querySelector(".filter-count").textContent = count;
+      });
+    }
+
+    function fuzzyScore(text, query) {
+      if (!query) return 1;
+      const haystack = text.toLowerCase();
+      const needle = query.toLowerCase().trim();
+      if (haystack.includes(needle)) return 100 - haystack.indexOf(needle);
+      let cursor = 0;
+      let score = 0;
+      for (let i = 0; i < haystack.length && cursor < needle.length; i += 1) {
+        if (haystack[i] === needle[cursor]) {
+          score += i === 0 || /[\s/+-]/.test(haystack[i - 1]) ? 4 : 1;
+          cursor += 1;
+        }
+      }
+      return cursor === needle.length ? score : -1;
+    }
+
+    function getCommandMatches() {
+      const query = commandInput.value;
+      return PROJECTS.map(function(project, index) {
+        const text = [project.title, project.description, project.section, project.status, project.visibility, project.owner].concat(project.tags).join(" ");
+        return { project: project, index: index, score: fuzzyScore(text, query) };
+      }).filter(function(item) {
+        const sectionMatch = commandSection.value === "all" || item.project.section === commandSection.value;
+        const statusMatch = commandStatus.value === "all" || item.project.status === commandStatus.value;
+        return item.score >= 0 && sectionMatch && statusMatch;
+      }).sort(function(a, b) { return b.score - a.score || a.index - b.index; });
+    }
+
+    function selectCommand(index) {
+      if (!commandMatches.length) return;
+      activeCommandIndex = Math.max(0, Math.min(index, commandMatches.length - 1));
+      Array.from(commandResults.querySelectorAll(".command-option")).forEach(function(option, optionIndex) {
+        const selected = optionIndex === activeCommandIndex;
+        option.setAttribute("aria-selected", String(selected));
+        if (selected) {
+          commandInput.setAttribute("aria-activedescendant", option.id);
+          option.scrollIntoView({ block: "nearest" });
+        }
+      });
+    }
+
+    function renderCommands() {
+      commandMatches = getCommandMatches();
+      activeCommandIndex = 0;
+      if (!commandMatches.length) {
+        commandResults.innerHTML = '<li class="command-empty">No projects match those filters.</li>';
+        commandInput.removeAttribute("aria-activedescendant");
+        return;
+      }
+      commandResults.innerHTML = commandMatches.map(function(item, index) {
+        return '<li><button class="command-option" id="command-option-' + index + '" type="button" role="option" aria-selected="' + (index === 0 ? "true" : "false") + '" data-result-index="' + index + '">' +
+          '<span class="command-option-title">' + escapeHtml(item.project.title) + '</span>' +
+          '<span class="command-option-section">' + escapeHtml(item.project.section) + ' · ' + escapeHtml(item.project.visibility) + '</span>' +
+          '<span class="command-option-status">' + escapeHtml(item.project.status) + '</span></button></li>';
+      }).join("");
+      commandInput.setAttribute("aria-activedescendant", "command-option-0");
+    }
+
+    function openPalette() {
+      lastFocused = document.activeElement;
+      palette.classList.remove("hidden");
+      palette.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+      renderCommands();
+      window.requestAnimationFrame(function() { commandInput.focus(); commandInput.select(); });
+    }
+
+    function closePalette() {
+      palette.classList.add("hidden");
+      palette.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+      if (lastFocused && typeof lastFocused.focus === "function") lastFocused.focus();
+    }
+
+    function runCommand(resultIndex) {
+      const match = commandMatches[resultIndex];
+      if (!match) return;
+      closePalette();
+      setPageFilter("all");
+      window.requestAnimationFrame(function() {
+        const card = document.getElementById("project-" + match.index);
+        if (card) {
+          card.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center" });
+          card.focus({ preventScroll: true });
+        }
+      });
+    }
+
+    commandSection.innerHTML = '<option value="all">All sections</option>' + SECTIONS.map(function(section) { return '<option value="' + escapeHtml(section) + '">' + escapeHtml(section) + '</option>'; }).join("");
+    commandStatus.innerHTML = '<option value="all">All statuses</option>' + Object.keys(STATUS_COLORS).map(function(status) { return '<option value="' + status + '">' + status.charAt(0).toUpperCase() + status.slice(1) + '</option>'; }).join("");
+
+    buttons.forEach(function(button) {
+      button.addEventListener("click", function() { setPageFilter(button.dataset.filter); });
+    });
+
+    viewButtons.forEach(function(button) {
+      button.addEventListener("click", function() { setView(button.dataset.view); });
+    });
+
+    const platform = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || "";
+    shortcutHint.textContent = /mac|iphone|ipad|ipod/i.test(platform) ? "⌘K" : "Ctrl+K";
+
+    commandTrigger.addEventListener("click", openPalette);
+    commandClose.addEventListener("click", closePalette);
+    commandInput.addEventListener("input", renderCommands);
+    commandSection.addEventListener("change", renderCommands);
+    commandStatus.addEventListener("change", renderCommands);
+    commandResults.addEventListener("click", function(event) {
+      const option = event.target.closest(".command-option");
+      if (option) runCommand(Number(option.dataset.resultIndex));
+    });
+    commandResults.addEventListener("mousemove", function(event) {
+      const option = event.target.closest(".command-option");
+      if (option) selectCommand(Number(option.dataset.resultIndex));
+    });
+    palette.addEventListener("click", function(event) { if (event.target === palette) closePalette(); });
+
+    document.addEventListener("keydown", function(event) {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        palette.classList.contains("hidden") ? openPalette() : closePalette();
+        return;
+      }
+      if (!palette.classList.contains("hidden") && event.key === "Escape") {
+        event.preventDefault();
+        closePalette();
+      }
+    });
+
+    commandInput.addEventListener("keydown", function(event) {
+      if (event.key === "ArrowDown") { event.preventDefault(); selectCommand(activeCommandIndex + 1); }
+      if (event.key === "ArrowUp") { event.preventDefault(); selectCommand(activeCommandIndex - 1); }
+      if (event.key === "Home") { event.preventDefault(); selectCommand(0); }
+      if (event.key === "End") { event.preventDefault(); selectCommand(commandMatches.length - 1); }
+      if (event.key === "Enter") { event.preventDefault(); runCommand(activeCommandIndex); }
+    });
+
+    document.querySelector(".command-panel").addEventListener("keydown", function(event) {
+      if (event.key !== "Tab") return;
+      const focusable = Array.from(this.querySelectorAll('input, select, button:not([disabled])')).filter(function(element) { return element.offsetParent !== null; });
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    });
+
+    function updateBackToTop() {
+      backToTop.hidden = window.scrollY <= 520;
+    }
+    window.addEventListener("scroll", updateBackToTop, { passive: true });
+    backToTop.addEventListener("click", function() {
+      window.scrollTo({ top: 0, behavior: "auto" });
+    });
+    updateBackToTop();
+
+    document.getElementById("openable-count").textContent = PROJECTS.filter(function(project) { return Boolean(project.href); }).length;
+    updateCounts();
+    setView("grid");
+    setPageFilter("all");
+  </script>
+</body>
+</html>
